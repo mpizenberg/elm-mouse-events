@@ -6,7 +6,7 @@
 [license]: https://www.mozilla.org/en-US/MPL/2.0/
 
 This package aims at handling mouse events in elm
-with more details than in `Html.Events`
+with more details than in `Html.Events`.
 
 
 ## Motivation
@@ -21,10 +21,30 @@ custom json decoders, this package provides mouse events with coordinates.
 
 ## Usage
 
+A functional example is available in the `examples/` folder.
+But to have an overview of how to use this package, see below
+what a `Msg` type and an `Attribute Msg` might look like using this Mouse module:
 
-## The Event type
+```elm
+import Mouse
 
-The Event type is a reflection of the [JavaScript specification of a mouse event][mouse-event-mdn].
+type Msg
+    = MouseDown Mouse.Event
+    | MouseMove Mouse.Event
+    | MouseUp Mouse.Event
+
+mouseEvents : List (Html.Attribute Msg)
+mouseEvents =
+    [ Mouse.onDown MouseDown
+    , Mouse.onMove MouseMove
+    , Mouse.onUp MouseUp
+    ]
+```
+
+
+## The Mouse.Event type
+
+The `Mouse.Event` type is a reflection of the [JavaScript specification of a mouse event][mouse-event-mdn].
 The attributes kept are:
 
  * [altKey][alt-key]
@@ -36,6 +56,8 @@ The attributes kept are:
  * [offsetY][offsetY]
  * [movementX][movementX]
  * [movementY][movementY]
+
+Go see it's definition in the `Mouse` module to know its exact record structure.
 
 [mouse-event-mdn]: https://developer.mozilla.org/en/docs/Web/API/MouseEvent
 
@@ -49,3 +71,20 @@ The attributes kept are:
 [offsetY]: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/offsetY
 [movementX]: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/movementX
 [movementY]: https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/movementY
+
+
+## Documentation
+
+The package documentation is available on the [elm package website][doc].
+
+
+## License
+
+This Source Code Form is subject to the terms of the Mozilla Public License,v. 2.0.
+If a copy of the MPL was not distributed with this file,
+You can obtain one at https://mozilla.org/MPL/2.0/.
+
+
+## Authors
+
+Original author: Matthieu Pizenberg (matthieu.pizenberg@gmail.com)
