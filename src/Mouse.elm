@@ -31,7 +31,7 @@ import Json.Decode as Decode exposing (Decoder)
 type alias Event =
     { key : Keys
     , clientPos : Coordinates
-    , offset : Coordinates
+    , offsetPos : Coordinates
     , movement : Movement
     }
 
@@ -106,7 +106,7 @@ eventDecoder =
     Decode.map4 Event
         (keyDecoder)
         (clientPosDecoder)
-        (offsetDecoder)
+        (offsetPosDecoder)
         (movementDecoder)
 
 
@@ -125,8 +125,8 @@ clientPosDecoder =
         (Decode.field "clientY" Decode.float)
 
 
-offsetDecoder : Decoder Coordinates
-offsetDecoder =
+offsetPosDecoder : Decoder Coordinates
+offsetPosDecoder =
     Decode.map2 (,)
         (Decode.field "offsetX" Decode.float)
         (Decode.field "offsetY" Decode.float)
