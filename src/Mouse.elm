@@ -22,6 +22,8 @@ import Html exposing (Attribute)
 import Html.Events as Events
 import Json.Decode as Decode exposing (Decoder)
 
+import Bitwise
+
 
 -- MODEL #############################################################
 
@@ -33,7 +35,15 @@ type alias Event =
     , clientPos : Coordinates
     , offsetPos : Coordinates
     , movement : Movement
+    , buttons : List Button
     }
+
+type Button
+    = Left
+    | Right
+    | Wheel
+    | BrowserForward
+    | BrowserBack
 
 
 {-| The keys that might have been pressed during mouse event.
@@ -103,11 +113,12 @@ stopOptions =
 
 eventDecoder : Decoder Event
 eventDecoder =
-    Decode.map4 Event
+    Decode.map5 Event
         (keyDecoder)
         (clientPosDecoder)
         (offsetPosDecoder)
         (movementDecoder)
+        (buttonsDecoder)
 
 
 keyDecoder : Decoder Keys
@@ -137,3 +148,25 @@ movementDecoder =
     Decode.map2 (,)
         (Decode.field "movementX" Decode.float)
         (Decode.field "movementY" Decode.float)
+
+
+
+buttonsDecoder : Decoder (List Button)
+buttonsDecoder =
+    let
+        buttonNumber : Button -> Int
+        buttonNumber button =
+            case button of
+                Left ->1
+                Right -> 2
+                Wheel -> 4
+                BrowserForward -> 8
+                BrowserBack -> 16
+
+        buttonIsPressed pressedInt button =
+            0 /= Bitwise.and pressedInt (buttonNumber button)
+
+        decodeFunction pressedInt =
+            List.filter (buttonIsPressed pressedInt) <| [Left, Right, Wheel, BrowserForward, BrowserBack]
+    in
+        Decode.map decodeFunction <| Decode.field "buttons" Decode.int
