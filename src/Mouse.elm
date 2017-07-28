@@ -4,6 +4,7 @@ module Mouse
         , Keys
         , Coordinates
         , Movement
+        , Button (..)
         , onDown
         , onMove
         , onUp
