@@ -8,6 +8,7 @@ module Mouse
         , onMove
         , onUp
         , onWithOptions
+        , eventDecoder
         )
 
 {-| Handling detailed mouse events.
@@ -15,6 +16,8 @@ module Mouse
 @docs Event, Keys, Coordinates, Movement
 
 @docs onDown, onMove, onUp, onWithOptions
+
+@docs eventDecoder
 
 -}
 
@@ -101,6 +104,8 @@ stopOptions =
 -- DECODERS ##########################################################
 
 
+{-| An `Event` decoder for mouse events.
+-}
 eventDecoder : Decoder Event
 eventDecoder =
     Decode.map4 Event
