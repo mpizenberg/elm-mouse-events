@@ -4,6 +4,7 @@ module Mouse
         , Keys
         , Coordinates
         , Movement
+        , Buttons
         , onDown
         , onMove
         , onUp
@@ -13,7 +14,7 @@ module Mouse
 
 {-| Handling detailed mouse events.
 
-@docs Event, Keys, Coordinates, Movement
+@docs Event, Keys, Coordinates, Movement, Buttons
 
 @docs onDown, onMove, onUp, onWithOptions
 
@@ -24,6 +25,7 @@ module Mouse
 import Html exposing (Attribute)
 import Html.Events as Events
 import Json.Decode as Decode exposing (Decoder)
+import Bitwise
 
 
 -- MODEL #############################################################
@@ -36,7 +38,14 @@ type alias Event =
     , clientPos : Coordinates
     , offsetPos : Coordinates
     , movement : Movement
+    , buttons : Buttons
     }
+
+
+{-| The buttons pressed during mouse event.
+-}
+type alias Buttons =
+    { left : Bool, right : Bool, wheel : Bool }
 
 
 {-| The keys that might have been pressed during mouse event.
@@ -108,11 +117,12 @@ stopOptions =
 -}
 eventDecoder : Decoder Event
 eventDecoder =
-    Decode.map4 Event
+    Decode.map5 Event
         (keyDecoder)
         (clientPosDecoder)
         (offsetPosDecoder)
         (movementDecoder)
+        (buttonsDecoder)
 
 
 keyDecoder : Decoder Keys
@@ -142,3 +152,17 @@ movementDecoder =
     Decode.map2 (,)
         (Decode.field "movementX" Decode.float)
         (Decode.field "movementY" Decode.float)
+
+
+buttonsDecoder : Decoder Buttons
+buttonsDecoder =
+    Decode.map3 Buttons
+        (Decode.field "buttons" (decodeButton 1))
+        (Decode.field "buttons" (decodeButton 2))
+        (Decode.field "buttons" (decodeButton 4))
+
+
+decodeButton : Int -> Decoder Bool
+decodeButton id =
+    Decode.int
+        |> Decode.map (\int -> Bitwise.and int id /= 0)
