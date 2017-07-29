@@ -4,7 +4,7 @@ module Mouse
         , Keys
         , Coordinates
         , Movement
-        , Button (..)
+        , Buttons
         , onDown
         , onMove
         , onUp
@@ -13,7 +13,7 @@ module Mouse
 
 {-| Handling detailed mouse events.
 
-@docs Event, Keys, Coordinates, Movement
+@docs Event, Keys, Coordinates, Movement, Buttons
 
 @docs onDown, onMove, onUp, onWithOptions
 
@@ -22,7 +22,6 @@ module Mouse
 import Html exposing (Attribute)
 import Html.Events as Events
 import Json.Decode as Decode exposing (Decoder)
-
 import Bitwise
 
 
@@ -36,15 +35,14 @@ type alias Event =
     , clientPos : Coordinates
     , offsetPos : Coordinates
     , movement : Movement
-    , buttons : List Button
+    , buttons : Buttons
     }
 
-type Button
-    = Left
-    | Right
-    | Wheel
-    | BrowserForward
-    | BrowserBack
+
+{-| The buttons pressed during mouse event.
+-}
+type alias Buttons =
+    { left : Bool, right : Bool, wheel : Bool }
 
 
 {-| The keys that might have been pressed during mouse event.
@@ -151,23 +149,15 @@ movementDecoder =
         (Decode.field "movementY" Decode.float)
 
 
-
-buttonsDecoder : Decoder (List Button)
+buttonsDecoder : Decoder Buttons
 buttonsDecoder =
-    let
-        buttonNumber : Button -> Int
-        buttonNumber button =
-            case button of
-                Left ->1
-                Right -> 2
-                Wheel -> 4
-                BrowserForward -> 8
-                BrowserBack -> 16
+    Decode.map3 Buttons
+        (Decode.field "buttons" (decodeButton 1))
+        (Decode.field "buttons" (decodeButton 2))
+        (Decode.field "buttons" (decodeButton 4))
 
-        buttonIsPressed pressedInt button =
-            0 /= Bitwise.and pressedInt (buttonNumber button)
 
-        decodeFunction pressedInt =
-            List.filter (buttonIsPressed pressedInt) <| [Left, Right, Wheel, BrowserForward, BrowserBack]
-    in
-        Decode.map decodeFunction <| Decode.field "buttons" Decode.int
+decodeButton : Int -> Decoder Bool
+decodeButton id =
+    Decode.int
+        |> Decode.map (\int -> Bitwise.and int id /= 0)
