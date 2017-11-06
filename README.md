@@ -1,4 +1,7 @@
-# elm-mouse-events [![][badge-license]][license]
+# elm-mouse-events
+
+[![][badge-license]][license]
+[![][badge-doc]][doc]
 
 [badge-doc]: https://img.shields.io/badge/documentation-latest-yellow.svg?style=flat-square
 [doc]: http://package.elm-lang.org/packages/mpizenberg/elm-mouse-events/latest
