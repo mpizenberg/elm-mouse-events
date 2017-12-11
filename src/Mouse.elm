@@ -1,19 +1,18 @@
 module Mouse
     exposing
-        ( Event
+        ( Coordinates
+        , Event
         , Keys
-        , Coordinates
-        , Movement
+        , eventDecoder
         , onDown
         , onMove
         , onUp
         , onWithOptions
-        , eventDecoder
         )
 
 {-| Handling detailed mouse events.
 
-@docs Event, Keys, Coordinates, Movement
+@docs Event, Keys, Coordinates
 
 @docs onDown, onMove, onUp, onWithOptions
 
@@ -35,7 +34,6 @@ type alias Event =
     { key : Keys
     , clientPos : Coordinates
     , offsetPos : Coordinates
-    , movement : Movement
     }
 
 
@@ -48,12 +46,6 @@ type alias Keys =
 {-| Coordinates of a mouse event.
 -}
 type alias Coordinates =
-    ( Float, Float )
-
-
-{-| Motion of a mouse movement.
--}
-type alias Movement =
     ( Float, Float )
 
 
@@ -108,11 +100,10 @@ stopOptions =
 -}
 eventDecoder : Decoder Event
 eventDecoder =
-    Decode.map4 Event
-        (keyDecoder)
-        (clientPosDecoder)
-        (offsetPosDecoder)
-        (movementDecoder)
+    Decode.map3 Event
+        keyDecoder
+        clientPosDecoder
+        offsetPosDecoder
 
 
 keyDecoder : Decoder Keys
@@ -135,10 +126,3 @@ offsetPosDecoder =
     Decode.map2 (,)
         (Decode.field "offsetX" Decode.float)
         (Decode.field "offsetY" Decode.float)
-
-
-movementDecoder : Decoder Movement
-movementDecoder =
-    Decode.map2 (,)
-        (Decode.field "movementX" Decode.float)
-        (Decode.field "movementY" Decode.float)
