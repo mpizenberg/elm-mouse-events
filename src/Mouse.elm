@@ -56,25 +56,22 @@ type alias Coordinates =
 {-| Listen to `mousedown` events.
 -}
 onDown : (Event -> msg) -> Attribute msg
-onDown tag =
-    Decode.map tag eventDecoder
-        |> Events.onWithOptions "mousedown" stopOptions
+onDown =
+    onWithOptions "mousedown" stopOptions
 
 
 {-| Listen to `mousemove` events.
 -}
 onMove : (Event -> msg) -> Attribute msg
-onMove tag =
-    Decode.map tag eventDecoder
-        |> Events.onWithOptions "mousemove" stopOptions
+onMove =
+    onWithOptions "mousemove" stopOptions
 
 
 {-| Listen to `mouseup` events.
 -}
 onUp : (Event -> msg) -> Attribute msg
-onUp tag =
-    Decode.map tag eventDecoder
-        |> Events.onWithOptions "mouseup" stopOptions
+onUp =
+    onWithOptions "mouseup" stopOptions
 
 
 {-| Choose the mouse event to listen to, and specify the event options.
