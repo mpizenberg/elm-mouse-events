@@ -8,6 +8,12 @@
 [badge-license]: https://img.shields.io/badge/license-MPL--2.0-blue.svg?style=flat-square
 [license]: https://www.mozilla.org/en-US/MPL/2.0/
 
+> WARNING:
+> This package will be merged into [elm-pointer-events] when the release 0.19 of elm will be out.
+> It won't be updated to elm 0.19.
+
+[elm-pointer-events]: https://github.com/mpizenberg/elm-pointer-events
+
 This package aims at handling mouse events in elm
 with more details than in `Html.Events`.
 
